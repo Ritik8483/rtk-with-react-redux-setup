@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Hooks from "./components/Hooks/Hooks";
+import ThrottledButton from "./components/Hooks/Throttling";
+import Person from "./components/classComponents/Person";
+import { useFetchallDataQuery } from "./redux/api/api";
 
 function App() {
+  //always use 'use client' while using query or mutation
+  //use 'use client' in in next js in page.tsx,layout.tsx file in src->app
+  //In next.js wrap children like this
+  // <body className={inter.className}>
+  //       <Provider store={store}>
+  //         <PersistGate loading={null} persistor={persistor}>
+  //           {children}
+  //         </PersistGate>
+  //       </Provider>
+  //     </body>
+  
+  // QUERY FETCHING
+  const reqObj = {
+    url: "posts",
+  };
+  const { data } = useFetchallDataQuery(reqObj);
+  console.log("data", data);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Hooks />
+      {/* <ThrottledButton/> */}
+      {/* <Person name="Ritik" /> */}
     </div>
   );
 }
