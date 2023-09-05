@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
 import {
   FLUSH,
   PAUSE,
@@ -8,34 +8,34 @@ import {
   PURGE,
   REGISTER,
   REHYDRATE,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
-
-import { api } from '../api/api'
-import middleware from '../api/middleware'
-import rootReducer from '../rootReducer/rootReducer'
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import storageSession from "redux-persist/lib/storage/session";
+import { api } from "../api/api";
+import middleware from "../api/middleware";
+import rootReducer from "../rootReducer/rootReducer";
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   version: 1,
   storage,
-  whitelist: ['authSlice'], // reducers which you want to persist
+  whitelist: ["authSlice"], // reducers which you want to persist
   blacklist: [api.reducerPath], // reducers which you don't want to persist
-}
-
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+};
+const authPersistConfig = { key: "root", storage: storageSession };
+const persistedReducer = persistReducer(authPersistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
   ...middleware,
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(api.middleware),
-})
+});
 
-export const persistor = persistStore(store)
-export type RootState = ReturnType<typeof store.getState>
-export default store
+export const persistor = persistStore(store);
+export type RootState = ReturnType<typeof store.getState>;
+export default store;
